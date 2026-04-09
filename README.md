@@ -69,7 +69,7 @@ The goal is simple: build the mechanic once, document it properly, and let every
 git clone https://github.com/vijit101/UnityMechanicsFramework.git
 ```
 
-Import this Unity as a github pacakge using Unity Package manager . All packages import automatically via `package.json`.
+Open the cloned folder as a Unity project. All packages import automatically via `package.json`.
 
 ### Option B — Grab a single mechanic
 
@@ -155,7 +155,7 @@ physics.SetVelocity(Vector2.zero);
 
 ### EventBus — Decoupled Communication
 
-Mechanics never hold direct references to each other. They communicate via events. A jump system never needs to know a sound manager exists. Not all mechanics migght follow this depending on the issues raised .
+Mechanics never hold direct references to each other. They communicate via events. A jump system never needs to know a sound manager exists.
 
 ```csharp
 // Any mechanic can publish:
@@ -185,6 +185,7 @@ EventBus.Subscribe<PlayerJumpedEvent>(e => audioManager.PlayJumpSound());
 |---|---|---|---|---|
 | 1 | [MonoSingleton Generic](#1-monosingleton-generic) | Shubham B | Core | — |
 | 2 | [Generic & Scalable Dialogue System](#2-generic--scalable-dialogue-system) | Mayur | Dialogue | [▶ Watch](https://github.com/vijit101/UnityMechanicsFramework/tree/main/RuntimeMechanics/Dailogue/2.%20GenericAndScalableDialogueSystem/Assets/Video%20tutorial) |
+| 3 | [Bullet Time / Slow Motion](#3-bullet-time--slow-motion) | [Ishan Avasthi](https://github.com/ishanavasthi) | Movement | [▶ Watch](Samples~/BulletTime/Assets/Video/BulletTimeObject.mp4) |
 
 *More mechanics are added with every merged PR. [Contribute yours →](#9-how-to-contribute)*
 
@@ -243,10 +244,10 @@ GameManager.Instance.AddScore(10);
 
 **What it does**
 
-A `ScriptableObject`-based dialogue framework for building flexible, branching conversations in Unity. Scale from a single NPC exchange to a full narrative tree without ever modifying the core system. New dialogue is added as data not code.
+A `ScriptableObject`-based dialogue framework for building flexible, branching conversations in Unity. Scale from a single NPC exchange to a full narrative tree without ever modifying the core system. New dialogue is added as data — not code.
 
 **How to use it**
- Note to meintainer : need to fix the part for how to use dialogue system later / for the one using it find the video and watch it  
+ need to add a fix this doc a bit  / raise an issue
 ```csharp
 using GameplayMechanicsUMFOSS.Dialogue;
 
@@ -274,49 +275,41 @@ dialogueSystem.StartDialogue(npcDatabase, onComplete: () =>
 
 ---
 
-<!--
-================================================================
-CONTRIBUTOR ENTRY TEMPLATE
-================================================================
-
-Copy the block below and fill it in when your PR is merged.
-Delete this comment block before committing.
-
-### N. Your Mechanic Name
+### 3. Bullet Time / Slow Motion
 
 | | |
 |---|---|
-| **Author** | [Your Name](https://github.com/your-handle) |
-| **Namespace** | `GameplayMechanicsUMFOSS.YourFeatureGroup` |
-| **Location** | `Runtime/YourFeatureGroup/YourMechanicScript.cs` |
-| **Category** | Movement / Combat / UI / Core / etc. |
-| **Demo Scene** | `Samples~/YourMechanicName/Assets/Scenes/DemoScene.unity` |
-| **Video** | [▶ Watch Walkthrough](YOUR_VIDEO_LINK_HERE) |
+| **Author** | [Ishan Avasthi](https://github.com/ishanavasthi) |
+| **Namespace** | `GameplayMechanicsUMFOSS.Systems` |
+| **Location** | `Runtime/Systems/BulletTime/` |
+| **Category** | Systems / VFX |
+| **Demo Scene** | `Samples~/BulletTime/Assets/Scenes/BulletTimeDemo.unity` |
+| **Video** | [▶ Watch Walkthrough](Samples~/BulletTime/Assets/Video/BulletTimeTutorial.mp4) |
 
 **What it does**
 
-One or two sentences. What problem does this mechanic solve?
-What type of game would use this?
+A production-ready slow-motion system that handles the three "hidden" pillars of time manipulation: Physics stability, Audio synchronization, and Smooth transitions. It allows developers to trigger cinematic "Bullet Time" effects that feel polished rather than jittery.
 
 **How to use it**
 
 ```csharp
-// A minimal working code example showing how to drop this into a project.
-// Show the most common use case — keep it short and clear.
-```
+using GameplayMechanicsUMFOSS.Systems;
 
+// 1. Ensure an AudioMixer exists with an exposed parameter named "MasterPitch".
+// 2. Attach BulletTimeSystem_UMFOSS to a global manager object.
+// 3. Create a SlowMoConfig_UMFOSS asset (Right-click > Create > UMFOSS > Systems > SlowMoConfig).
+// 4. Trigger via code:
+BulletTimeSystem_UMFOSS.Instance.Enter(yourConfig);
+
+// 5. Exit back to normal time:
+BulletTimeSystem_UMFOSS.Instance.Exit();
+```
 **Highlights**
 
-- Key architectural point
-- Key gameplay feature
-- Key learning value (what pattern or concept does this teach?)
-
-Also add a row to the Quick Navigation table above:
-| N | [Your Mechanic Name](#n-your-mechanic-name) | Your Name | Category | [▶ Watch](YOUR_VIDEO_LINK) |
-
-================================================================
--->
-
+- **Dynamic Physics Scaling:** Automatically updates ```Time.fixedDeltaTime``` proportionally to the time scale, preventing physics jitter and CPU spikes during extreme slowdowns.
+- **Audio Pitch Sync:** Directly controls an exposed ```AudioMixer``` parameter to pitch-shift game audio, providing immediate "deep" cinematic feedback.
+- **Unscaled Lerping:** Uses ```Time.unscaledDeltaTime``` for internal transitions, ensuring that entering and exiting Bullet Time takes a consistent amount of real-world time.
+- **Designer Friendly:** Uses ```AnimationCurve``` and ```ScriptableObjects``` so designers can tune the "feel" of the slowdown without touching code.
 ---
 
 ## 7. Namespace Reference
@@ -349,7 +342,7 @@ All scripts use `GameplayMechanicsUMFOSS` as the base namespace, extended by fea
 | Unity 6 | ✅ Supported |
 
 **Additional notes:**
-- All mechanics target **2D games** by default. But some Issues and PR's  are beyond 2d or 3d that can be used by all. The `IPhysicsAdapter` layer makes extending to 3D straightforward without modifying mechanic code
+- All mechanics target **2D games** by default. The `IPhysicsAdapter` layer makes extending to 3D straightforward without modifying mechanic code
 - Compatible with both **Built-In Render Pipeline** and **URP**
 - Compatible with both **Legacy Input** and the **new Unity Input System** via `InputAdapter`
 - If your mechanic requires additional packages (Cinemachine, TextMeshPro, etc.), declare them in your PR and in your `ScriptExplainer.txt` header
@@ -360,7 +353,7 @@ All scripts use `GameplayMechanicsUMFOSS` as the base namespace, extended by fea
 
 This library grows with every Pull Request. Every mechanic you contribute is permanently credited to you in the Mechanics Library above, complete with your name, your GitHub profile, and a link to your walkthrough video.
 
-**The contribution flow at a Glance (See details in Contributing.MD):**
+**The contribution flow:**
 
 ```
 1.  Open an Issue  →  label: mechanic-proposal  →  describe what you want to build
@@ -401,3 +394,14 @@ Contributors retain permanent credit in the Mechanics Library for every mechanic
 *Find a mechanic that saves you time. Contribute one that saves someone else's.* ⭐
 
 </div>
+
+
+**How to use it**
+
+```csharp
+using GameplayMechanicsUMFOSS.Movement;
+
+// 1. Attach GroundPound_UMFOSS to a Player with a Rigidbody2D.
+// 2. Assign a GroundPoundConfig_UMFOSS ScriptableObject.
+// 3. Press 'S' (default) while airborne to trigger.
+// 4. Press 'Space' during descent to cancel.

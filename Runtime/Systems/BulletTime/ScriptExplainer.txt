@@ -1,0 +1,58 @@
+System: Bullet Time / Slow Motion System  
+Namespace: GameplayMechanics.UMFOSS.Systems  
+
+------------------------------------------------------------
+
+1. Physics Stability (FixedDeltaTime)
+
+One of the most common mistakes in Unity slow-motion systems is neglecting Time.fixedDeltaTime.
+
+The Issue:
+By default, FixedUpdate runs every 0.02s (real time). If timeScale is set to 0.1 (10% speed) but fixedDeltaTime remains 0.02, Unity will attempt to run physics calculations 10x more frequently relative to game time, causing massive CPU spikes.
+
+The Solution:
+This system scales Time.fixedDeltaTime proportionally:
+
+Time.fixedDeltaTime = 0.02f * Time.timeScale
+
+This ensures the physics engine maintains a consistent simulation frequency regardless of the time scale.
+
+------------------------------------------------------------
+
+2. Transition Logic (Unscaled Delta Time)
+
+The transitions in BulletTimeSystem_UMFOSS.cs are handled via Coroutines using Time.unscaledDeltaTime.
+
+Why:
+If we used Time.deltaTime to lerp the timeScale, the transition itself would slow down as it progressed. At very low time scales, the transition would feel "stuck" or take infinitely longer to reach the target.
+
+Time.unscaledDeltaTime ensures a consistent real-world duration for the "Enter" and "Exit" effects.
+
+------------------------------------------------------------
+
+3. Audio Mixer Integration
+
+Pitch-shifting every AudioSource individually is inefficient. This system utilizes a global AudioMixer.
+
+Setup Requirement:
+1. Create/Open an AudioMixer.
+2. Select the Master group.
+3. In the Inspector, right-click the Pitch property and select "Expose 'Pitch' to script".
+4. In the Exposed Parameters tab, rename the parameter to MasterPitch.
+
+Effect:
+This allows the system to shift the pitch of the entire game's soundscape with a single API call, providing immediate cinematic feedback.
+
+------------------------------------------------------------
+
+4. Architecture
+
+SlowMoConfig_UMFOSS:
+A ScriptableObject that allows designers to create presets (Cinematic, Combat, Subtle) with unique curves and durations without touching the code.
+
+MonoSingletonGeneric:
+Ensures only one instance of the system exists, providing a global entry point via:
+
+BulletTimeSystem_UMFOSS.Instance
+
+------------------------------------------------------------
