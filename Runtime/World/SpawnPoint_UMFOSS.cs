@@ -9,6 +9,13 @@ namespace GameplayMechanicsUMFOSS.World
         [SerializeField] private float radius = 0f;
         [SerializeField] private Vector2 size = Vector2.one;
 
+        public void Configure(SpawnShape shape, float radius = 0f, Vector2 size = default)
+        {
+            this.shape = shape;
+            this.radius = radius;
+            this.size = size == default ? Vector2.one : size;
+        }
+
         public Vector3 GetSpawnPosition()
         {
             return shape switch

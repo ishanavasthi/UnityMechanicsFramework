@@ -46,6 +46,17 @@ namespace GameplayMechanicsUMFOSS.World
 
         // --- Public API ---
 
+        public void Configure(SpawnProfile_UMFOSS profile, List<SpawnPoint_UMFOSS> spawnPoints,
+            float interval = 3f, int maxActive = 5, bool spawnOnStart = true, bool respawnOnDeath = true)
+        {
+            this.profile = profile;
+            this.spawnPoints = spawnPoints;
+            this.spawnInterval = Mathf.Max(0.1f, interval);
+            this.maxActive = Mathf.Max(1, maxActive);
+            this.spawnOnStart = spawnOnStart;
+            this.respawnOnDeath = respawnOnDeath;
+        }
+
         public void StartSpawning()
         {
             if (isSpawning) return;
