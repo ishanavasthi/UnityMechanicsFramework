@@ -188,6 +188,14 @@ EventBus.Subscribe<PlayerJumpedEvent>(e => audioManager.PlayJumpSound());
 | 3 | [Spawner System](#3-spawner-system) | [Satish Rathod](https://github.com/satish-rathod) | World / Spawning | [▶ Watch](Sample/SpawnerSystem/SpawnerSystemVideos.zip) |
 | 4 | [Scene Manager System](#4-scene-manager-system) | [Nymish](https://github.com/nymishkash) | Systems | [▶ Watch](Samples~/SceneManagerSample/SceneManagerVideos.zip) |
 | 5 | [Modular Jump System](#5-modular-jump-system) | [Ankur Kalita](https://github.com/ankur-kalita) | Movement | [▶ Watch](./Samples~/JumpSystemSample/Video/ModularJumpImpl.mp4.zip) |
+| 23 | [Currency System](#23-currency-system) | [Aayush Khopade](https://github.com/aayushashokkhopade) [Krishna Patidar](https://github.com/krishna-p060) | Systems / Economy | [▶ Watch](https://www.loom.com/share/01de26ff40114577a2aff1fce3f39ec2) |
+| 64 | [Utils](#64-Utils) | [Shubham](https://github.com/vijit101) | Core | [▶ Watch]() |
+| 1 | [MonoSingleton Generic](#1-monosingleton-generic) | Shubham B | Core | (https://github.com/vijit101/UnityMechanicsFramework/tree/main/RuntimeMechanics/Dailogue/2.%20GenericAndScalableDialogueSystem/Assets/Video%20tutorial) |
+| 2 | [Generic & Scalable Dialogue System](#2-generic--scalable-dialogue-system) | Mayur | Dialogue | [▶ Watch]
+| 3 | [Modular Jump System](#3-modular-jump-system) | [Ankur Kalita](https://github.com/ankur-kalita) | Movement | [▶ Watch](./Samples~/JumpSystemSample/Video/ModularJumpImpl.mp4.zip) |
+| 24 | [Pause System](#24-pause-system) | [Souvik Kumar](https://github.com/Souvik-Cyclic) | Systems | [▶ Watch](Samples~/PauseSystemSample/Video/PauseSystemVideo.zip) |
+| 64 | [Utils](#64-Utils) | [Shubham ](https://github.com/vijit101) | Core | [▶ Watch]() |
+
 | 6 | [Screen Shake System](#6-screen-shake-system) | [Paramjeet Kaur](https://github.com/kauxp) | Systems | [▶ Watch](Samples~/ScreenShakeExample/Video/ScreenShakeTutorial.mp4) |
 | 64 | [Utils](#64-Utils) | [Shubham ](https://github.com/vijit101) | Core | [▶ Watch]() |
 
@@ -423,6 +431,21 @@ proximitySpawner.ForceSpawn();
 ---
 
 ### 4. Scene Manager System
+### 23. Currency System
+
+| | |
+|---|---|
+| **Author** | [Aayush Khopade](https://github.com/aayushashokkhopade) [Krishna Patidar](https://github.com/krishna-p060) |
+| **Namespace** | `GameplayMechanicsUMFOSS.Systems` |
+| **Location** | `Runtime/Systems/3. CurrencySystem/CurrencySystem_UMFOSS.cs` |
+| **Category** | Systems / Economy |
+| **Demo Scene** | `Samples~/CurrencySystem/Assets/Scenes/DemoScene.unity` |
+| **Video** | [▶ Watch Walkthrough](https://www.loom.com/share/01de26ff40114577a2aff1fce3f39ec2) |
+
+**What it does**
+
+A centralised, ScriptableObject-configured currency manager that tracks multiple currency types (Gold, Gems, XP, Keys, or any custom type) with earn, spend, atomic trade, balance capping, and save/load support. Drop it into any project that needs an in-game economy — shops, quests, upgrades, and loot systems plug in with a single line each.
+### 3. Scene Manager System
 
 | | |
 |---|---|
@@ -442,6 +465,21 @@ A centralized async scene management system that solves four real-world problems
 
 ```csharp
 using GameplayMechanicsUMFOSS.Systems;
+
+// Earn 50 gold from anywhere
+CurrencySystem_UMFOSS.Instance.Earn(CurrencyType_UMFOSS.Gold, 50);
+
+// Spend 30 gold — returns false if insufficient
+bool success = CurrencySystem_UMFOSS.Instance.Spend(CurrencyType_UMFOSS.Gold, 30);
+
+// Atomic trade: 10 gems for 200 gold — neither runs if gems insufficient
+CurrencySystem_UMFOSS.Instance.Transaction(
+    CurrencyType_UMFOSS.Gold, 200,
+    CurrencyType_UMFOSS.Gems, 10);
+
+// Subscribe to balance changes for UI updates
+CurrencySystem_UMFOSS.Instance.OnBalanceChanged += (type, oldBal, newBal) =>
+    Debug.Log($"{type}: {oldBal} -> {newBal}");
 using GameplayMechanicsUMFOSS.Core;
 
 // Step 1: Drop SceneManager_UMFOSS + PersistentScene_UMFOSS onto a bootstrap
@@ -514,9 +552,63 @@ jumpSystem.OnJumpEnd += () => Debug.Log("Landed!");
 
 **Highlights**
 
+- ScriptableObject-driven configuration — add new currency types with zero code changes
+- Six granular C# events for UI binding, audio, and game logic reactions
+- Atomic transactions prevent partial state corruption in multi-currency exchanges
+- Implements `ISaveable_UMFOSS` for seamless save/load integration (enum stored as int for stability)
+- Singleton access via `MonoSingletongeneric<T>` — one line from anywhere
+- **Async-first** — `LoadSceneMode.Additive` + `allowSceneActivation = false` until 90% means no main-thread freeze and no half-loaded flashes
+- **Persistent scene pattern** — your `AudioManager`, `SaveSystem`, and HUD singletons survive every transition without scattered `DontDestroyOnLoad` calls
+- **Auto-created fade canvas** — drop the prefab in any scene, call `LoadScene`, fades just work; zero inspector wiring required
+- **Push / Pop scene stacking** — pause menus, inventory, settings overlays additively load on top of gameplay without unloading the world beneath
+- **Seven EventBus events fire across the load lifecycle** — `SceneLoadStart`, `SceneLoadProgress`, `SceneLoadComplete`, `ScenePushed`, `ScenePopped`, `SceneReloaded`, `InputLock` — every other mechanic can hook in without coupling
+- **Ships with a full SLITHER snake game demo** — three levels, pause/stats overlays, game-over and victory screens — proving every API surface in a real game flow
 - **Adapter pattern** — `IPhysicsAdapter` with `Physics2DAdapter` and `Physics3DAdapter`. Zero duplicated logic between 2D and 3D modes.
 - **Platformer-ready** — coyote time, jump buffering, variable jump height, N-jumps, gravity multipliers, and terminal velocity — all configurable from the Inspector
 - **Demonstrates the Strategy pattern** — swappable physics backends via interface abstraction, teaching clean dependency inversion in Unity
+
+---
+
+### 24. Pause System
+
+| | |
+|---|---|
+| **Author** | [Souvik Kumar](https://github.com/Souvik-Cyclic) |
+| **Namespace** | `GameplayMechanicsUMFOSS.Systems` |
+| **Location** | `Runtime/Mechanic/PauseSystem/Scripts/PauseSystem_UMFOSS.cs` |
+| **Script Explainers** | `Runtime/Mechanic/PauseSystem/Script_Explainers/` |
+| **Category** | Systems |
+| **Demo Scene** | `Samples~/PauseSystemSample/Assets/Scenes/DemoScene.unity` |
+| **Video** | [▶ Watch Walkthrough](Samples~/PauseSystemSample/Video/PauseSystemVideo.zip) |
+
+**What it does**
+
+A centralised singleton pause system that freezes gameplay by setting `Time.timeScale` to 0, pauses all audio globally via `AudioListener.pause`, and broadcasts events so every other system can react without coupling to this one. Preserves bullet time and slow motion through a store-and-restore `timeScale` pattern, and optionally auto-pauses when the application loses OS focus.
+
+**How to use it**
+
+```csharp
+using GameplayMechanicsUMFOSS.Systems;
+using GameplayMechanicsUMFOSS.Core;
+
+// Step 1: Add PauseSystem_UMFOSS to a persistent GameObject in your scene
+
+// Step 2: Toggle pause from input or UI
+PauseSystem_UMFOSS.Instance.TogglePause();
+
+// Step 3: Call Pause() / Resume() directly from UI buttons
+pauseButton.onClick.AddListener(() => PauseSystem_UMFOSS.Instance.Pause());
+resumeButton.onClick.AddListener(() => PauseSystem_UMFOSS.Instance.Resume());
+
+// Step 4: React to pause/resume events from any other system — no direct reference needed
+EventBus.Subscribe<GamePausedEvent>(e => aiController.SetInputEnabled(false));
+EventBus.Subscribe<GameResumedEvent>(e => aiController.SetInputEnabled(true));
+```
+
+**Highlights**
+- Store-and-restore `timeScale` pattern — bullet time and slow motion survive pause/resume with zero extra code
+- Configurable pause key, optional focus-loss auto-pause, and per-project audio toggle via Inspector
+- Demonstrates the Singleton and EventBus patterns — pause state is globally accessible and fully decoupled from every system that reacts to it
 
 ---
 
@@ -581,7 +673,7 @@ All scripts use `GameplayMechanicsUMFOSS` as the base namespace, extended by fea
 | `GameplayMechanicsUMFOSS.Combat` | Hitboxes, damage, status effects | 🔓 Open for contribution |
 | `GameplayMechanicsUMFOSS.UI` | HUD, menus, tooltips | 🔓 Open for contribution |
 | `GameplayMechanicsUMFOSS.AI` | Patrol, pathfinding, decisions | 🔓 Open for contribution |
-| `GameplayMechanicsUMFOSS.Systems` | Save/load, audio, scene management | 🔓 Open for contribution |
+| `GameplayMechanicsUMFOSS.Systems` | Save/load, audio, scene management, currency | ✅ Active |
 
 ---
 
