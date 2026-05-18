@@ -199,6 +199,10 @@ EventBus.Subscribe<PlayerJumpedEvent>(e => audioManager.PlayJumpSound());
 
 | 6 | [Screen Shake System](#6-screen-shake-system) | [Paramjeet Kaur](https://github.com/kauxp) | Systems | [▶ Watch](Samples~/ScreenShakeExample/Video/ScreenShakeTutorial.mp4) |
 | 64 | [Utils](#64-Utils) | [Shubham ](https://github.com/vijit101) | Core | [▶ Watch]() |
+(https://github.com/vijit101/UnityMechanicsFramework/tree/main/RuntimeMechanics/Dailogue/2.%20GenericAndScalableDialogueSystem/Assets/Video%20tutorial) |
+| 3 | [Scene Manager System](#3-scene-manager-system) | [Nymish](https://github.com/nymishkash) | Systems | [▶ Watch](Samples~/SceneManagerSample/SceneManagerVideos.zip) |
+| 9 | [Modular 2D Movement System](#9-modular-2d-movement-system) | [Kumar Kartikay](https://github.com/KKartikay-27/) & [Amrutha CA](https://github.com/Amruthacagithub) | Movement | [▶ Watch](https://github.com/KKartikay-27/UnityMechanicsFramework/blob/feature/movement2d-system/Samples~/Modular2DMovementSystem/Modular2DMovementSystemVideo.zip) |
+|
 
 *More mechanics are added with every merged PR. [Contribute yours →](#9-how-to-contribute)*
 
@@ -609,6 +613,20 @@ jumpSystem.OnJumpEnd += () => Debug.Log("Landed!");
 
 ---
 
+### 9. Modular 2D Movement System
+
+| | |
+|---|---|
+| **Author** | [Kumar Kartikay](https://github.com/KKartikay-27/) and [Amrutha CA](https://github.com/Amruthacagithub)|
+| **Namespace** | `GameplayMechanicsUMFOSS.Movement` |
+| **Location** | `Runtime/Mechanic/Movement2D/Scripts/` |
+| **Category** | Movement |
+| **Demo Scene** | `Samples~/Modular2DMovementSystem/Modular2DMovementSystem.zip` |
+| **Video Zip** | `Samples~/Modular2DMovementSystem/Modular2DMovementSystemVideo.zip` |
+
+**What it does**
+
+One 2D movement script that changes its entire movement behavior by switching a dropdown in the Inspector. Nine movement modes covering every approach Unity offers for moving a 2D object — from pixel-perfect transform positioning to physics-based force accumulation.
 ### 24. Pause System
 
 | | |
@@ -628,6 +646,25 @@ A centralised singleton pause system that freezes gameplay by setting `Time.time
 **How to use it**
 
 ```csharp
+using GameplayMechanicsUMFOSS.Movement;
+
+// Step 1: Add Movement2D_UMFOSS component to your GameObject
+// Step 2: Select movement mode in Inspector dropdown
+// Step 3: Adjust parameters for desired feel
+
+// Step 4: Switch modes at runtime if needed
+Movement2D_UMFOSS movement = GetComponent<Movement2D_UMFOSS>();
+movement.SetMode(MovementMode.ForceAdditive); // Ice physics
+movement.SetMode(MovementMode.LerpSmooth);    // Ghost float
+```
+
+**Highlights**
+
+- **9 distinct movement modes** in one component — Transform group (5 modes) + Physics group (4 modes)
+- **Runtime mode switching** with proper state cleanup — no velocity bleeding between modes
+- **Adapter pattern** for physics — using the project-wide `IPhysicsAdapter` for dimension-agnostic logic
+- **Event-driven architecture** — decoupled via actions for start, stop, and mode changes
+- **Comprehensive documentation** — detailed script explainers for both the core movement logic and the adapter system
 using GameplayMechanicsUMFOSS.Systems;
 using GameplayMechanicsUMFOSS.Core;
 
