@@ -42,7 +42,7 @@ This is a centralized, open-source library of gameplay mechanics that are:
 - **Plug-and-play** : drop any mechanic into your project and have it running within minutes
 - **Modular** : each system is fully self-contained with no hidden dependencies on other mechanics
 - **Video-documented** : every mechanic ships with a contributor-recorded walkthrough video
-- **Explained line-by-line** : every mechanic includes a `ScriptExplainer.txt` that teaches the code, not just shares it
+- **Explained line-by-line** : every mechanic includes a `Script_Explainers/` folder with one explainer per script so the code is taught, not just shared
 - **Production-ready** : built with clean architecture, interface-based physics, and decoupled event systems
 
 The goal is simple: build the mechanic once, document it properly, and let every Unity developer benefit from it forever.
@@ -193,7 +193,7 @@ EventBus.Subscribe<PlayerJumpedEvent>(e => audioManager.PlayJumpSound());
 | 1 | [MonoSingleton Generic](#1-monosingleton-generic) | Shubham B | Core | (https://github.com/vijit101/UnityMechanicsFramework/tree/main/RuntimeMechanics/Dailogue/2.%20GenericAndScalableDialogueSystem/Assets/Video%20tutorial) |
 | 2 | [Generic & Scalable Dialogue System](#2-generic--scalable-dialogue-system) | Mayur | Dialogue | [▶ Watch]
 | 3 | [Modular Jump System](#3-modular-jump-system) | [Ankur Kalita](https://github.com/ankur-kalita) | Movement | [▶ Watch](./Samples~/JumpSystemSample/Video/ModularJumpImpl.mp4.zip) |
-| 27 | [Boomerang Weapon](#27-boomerang-weapon-system) | [Shrinibas Mahanta](https://github.com/2k4sm), [Shreyas Garg](https://github.com/shreyas-garg), [Sudharsan](https://github.com/Bug-Finderr) | Combat | [▶ Watch](https://github.com/vijit101/UnityMechanicsFramework/tree/main/Samples~/BoomerangWeapon/BoomerangWeaponDemoVideo.zip) |
+| 27 | [Boomerang Weapon](#27-boomerang-weapon-system) | [Shrinibas Mahanta](https://github.com/2k4sm), [Shreyas Garg](https://github.com/shreyas-garg), [Sudharsan](https://github.com/Bug-Finderr) | Combat | [▶ Watch](Samples~/BoomerangWeapon/BoomerangWeaponSetupWalkthrough.zip) |
 | 24 | [Pause System](#24-pause-system) | [Souvik Kumar](https://github.com/Souvik-Cyclic) | Systems | [▶ Watch](Samples~/PauseSystemSample/Video/PauseSystemVideo.zip) |
 | 64 | [Utils](#64-Utils) | [Shubham ](https://github.com/vijit101) | Core | [▶ Watch]() |
 
@@ -298,10 +298,11 @@ dialogueSystem.StartDialogue(npcDatabase, onComplete: () =>
 |---|---|
 | **Author** | [Shrinibas Mahanta](https://github.com/2k4sm), [Shreyas Garg](https://github.com/shreyas-garg), [Sudharsan](https://github.com/Bug-Finderr) |
 | **Namespace** | `GameplayMechanicsUMFOSS.Combat` |
-| **Location** | `Runtime/Combat/BoomerangWeapon/BoomerangWeapon_UMFOSS.cs` |
+| **Location** | `Runtime/Mechanic/BoomerangWeapon/Scripts/` |
+| **Script Explainers** | `Runtime/Mechanic/BoomerangWeapon/Script_Explainers/` |
 | **Category** | Combat |
-| **Demo Scene** | `Samples~/BoomerangWeapon/Assets/Scenes/RecallDemo.unity` |
-| **Video** | [▶ Watch Walkthrough](https://github.com/vijit101/UnityMechanicsFramework/tree/main/Samples~/BoomerangWeapon/BoomerangWeaponDemoVideo.zip) |
+| **Sample Project** | `Samples~/BoomerangWeapon/BoomerangWeaponProject.zip` |
+| **Videos** | [▶ Demo Clip](Samples~/BoomerangWeapon/BoomerangWeaponDemoVideo.zip) and [▶ Setup + Script Walkthrough](Samples~/BoomerangWeapon/BoomerangWeaponSetupWalkthrough.zip) |
 
 **What it does**
 
@@ -767,7 +768,7 @@ All scripts use `GameplayMechanicsUMFOSS` as the base namespace, extended by fea
 - All mechanics target **2D games** by default. But some Issues and PR's  are beyond 2d or 3d that can be used by all. The `IPhysicsAdapter` layer makes extending to 3D straightforward without modifying mechanic code
 - Compatible with both **Built-In Render Pipeline** and **URP**
 - Compatible with both **Legacy Input** and the **new Unity Input System** via `InputAdapter`
-- If your mechanic requires additional packages (Cinemachine, TextMeshPro, etc.), declare them in your PR and in your `ScriptExplainer.txt` header
+- If your mechanic requires additional packages (Cinemachine, TextMeshPro, etc.), declare them in your PR and in the relevant files inside `Script_Explainers/`
 
 ---
 
@@ -782,8 +783,8 @@ This library grows with every Pull Request. Every mechanic you contribute is per
 2.  Fork the repo and create a branch:  mechanic/your-mechanic-name
 3.  Build your mechanic inside  Runtime/
 4.  Create a self-contained demo scene inside  Samples~/
-5.  Write  ScriptExplainer.txt  (line-by-line code explanation)
-6.  Record  Demo.mp4  (video walkthrough — mandatory)
+5.  Write one explainer per script inside `Script_Explainers/`
+6.  Record a walkthrough video and bundle it inside `Samples~/YourMechanicName/` as a ZIP
 7.  Add your entry to the Mechanics Library in this README
 8.  Open a PR titled:  [Mechanic] Add Your Mechanic Name
 ```
