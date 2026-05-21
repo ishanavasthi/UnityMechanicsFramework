@@ -194,6 +194,7 @@ EventBus.Subscribe<PlayerJumpedEvent>(e => audioManager.PlayJumpSound());
 | 2 | [Generic & Scalable Dialogue System](#2-generic--scalable-dialogue-system) | Mayur | Dialogue | [▶ Watch]
 | 3 | [Modular Jump System](#3-modular-jump-system) | [Ankur Kalita](https://github.com/ankur-kalita) | Movement | [▶ Watch](./Samples~/JumpSystemSample/Video/ModularJumpImpl.mp4.zip) |
 | 27 | [Boomerang Weapon](#27-boomerang-weapon-system) | [Shrinibas Mahanta](https://github.com/2k4sm), [Shreyas Garg](https://github.com/shreyas-garg), [Sudharsan](https://github.com/Bug-Finderr) | Combat | [▶ Watch](Samples~/BoomerangWeapon/BoomerangWeaponSetupWalkthrough.zip) |
+| 28 | [Bullet Time / Slow Motion System](#28-bullet-time--slow-motion-system) | OpenAI Codex | Systems | [▶ Watch](Samples~/BulletTime/BulletTimeVideos.zip) |
 | 24 | [Pause System](#24-pause-system) | [Souvik Kumar](https://github.com/Souvik-Cyclic) | Systems | [▶ Watch](Samples~/PauseSystemSample/Video/PauseSystemVideo.zip) |
 | 64 | [Utils](#64-Utils) | [Shubham ](https://github.com/vijit101) | Core | [▶ Watch]() |
 
@@ -330,6 +331,44 @@ EventBus.Subscribe<WeaponCaughtEvent>(e => Debug.Log("Caught!"));
 - 4-state machine (Equipped, Thrown, Embedded, Recalling) with clean physics handoffs via IPhysicsAdapter
 - Bezier curve return path with accelerating speed for a satisfying catch
 - Parents to hit surfaces on impact, works with moving platforms out of the box
+
+---
+### 28. Bullet Time / Slow Motion System
+
+| | |
+|---|---|
+| **Author** | OpenAI Codex |
+| **Namespace** | `GameplayMechanicsUMFOSS.Systems` |
+| **Location** | `Runtime/Mechanic/BulletTimeSystem/Scripts/` |
+| **Script Explainers** | `Runtime/Mechanic/BulletTimeSystem/Script_Explainers/` |
+| **Category** | Systems |
+| **Sample Project** | `Samples~/BulletTime/BulletTimeProject.zip` |
+| **Video** | [▶ Watch Walkthrough](Samples~/BulletTime/BulletTimeVideos.zip) |
+
+**What it does**
+
+A configurable bullet time and slow motion system that smoothly scales gameplay speed down, keeps `Time.fixedDeltaTime` proportional for stable physics, drains and recharges a real-time resource bar, and composes cleanly with the Pause System through a store-and-restore `timeScale` pattern.
+
+**How to use it**
+
+```csharp
+using GameplayMechanicsUMFOSS.Systems;
+
+[SerializeField] private SlowMoConfig_UMFOSS dodgeSlowMo;
+
+BulletTimeSystem_UMFOSS.Instance.Enter();
+BulletTimeSystem_UMFOSS.Instance.Enter(dodgeSlowMo);
+BulletTimeSystem_UMFOSS.Instance.Exit();
+
+EventBus.Subscribe<BulletTimeEnterEvent>(e => Debug.Log($"Slow mo -> {e.targetTimeScale}"));
+EventBus.Subscribe<BulletTimeExpiredEvent>(_ => Debug.Log("Slow motion depleted"));
+```
+
+**Highlights**
+
+- Smooth transitions built on `Time.unscaledDeltaTime` so the transition timing is not slowed by the value it is changing
+- Proportional `Time.fixedDeltaTime` updates keep physics stable in real time even at cinematic slow motion values
+- Pause-system compatibility out of the box through exact timeScale restore and paused-state override support
 
 ---
 ---

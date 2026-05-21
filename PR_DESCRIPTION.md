@@ -1,65 +1,53 @@
-# [Mechanic] Update Boomerang Weapon Submission
+# [Mechanic] Implement Bullet Time / Slow Motion System
 
 ## Mechanic Name
 
-**Boomerang Weapon System** — `GameplayMechanicsUMFOSS.Combat`
+**Bullet Time / Slow Motion System** — `GameplayMechanicsUMFOSS.Systems`
 
-## What changed in this update?
+## What does it do?
 
-This update focuses on the requested submission fundamentals:
+This PR adds the original requested bullet time mechanic: a configurable slow motion singleton that smoothly changes `Time.timeScale`, keeps `Time.fixedDeltaTime` proportional for physics stability, adjusts audio pitch, drains and recharges a real-time resource, fires lifecycle events, and integrates cleanly with the existing Pause System so the two never fight over `Time.timeScale`.
 
-1. The boomerang runtime scripts now live under `Runtime/Mechanic/BoomerangWeapon/Scripts/`
-2. The old combined explainer has been replaced with one explainer per runtime script inside `Runtime/Mechanic/BoomerangWeapon/Script_Explainers/`
-3. The loose sample `Assets/` content has been removed from `Samples~/BoomerangWeapon/`
-4. The original demo clip is still included, and a second walkthrough video ZIP has been added for:
-   - script walkthrough
-   - prefab setup from scratch
-   - end-to-end mechanic behavior
-5. README and contribution docs were updated so the boomerang entry matches the current submission format
+## How to test it
 
-## How to review it
-
-1. Extract `Samples~/BoomerangWeapon/BoomerangWeaponProject.zip`
+1. Extract `Samples~/BulletTime/BulletTimeProject.zip`
 2. Open the extracted project in **Unity 2021.3 LTS or later**
-3. Review the runtime source in `Runtime/Mechanic/BoomerangWeapon/Scripts/`
-4. Review the explainers in `Runtime/Mechanic/BoomerangWeapon/Script_Explainers/`
-5. Open `Samples~/BoomerangWeapon/BoomerangWeaponDemoVideo.zip` for the original gameplay demo
-6. Open `Samples~/BoomerangWeapon/BoomerangWeaponSetupWalkthrough.zip` for the setup and script walkthrough
+3. Press **Play** in the default sample scene
+4. Use the on-screen buttons for `Subtle`, `Standard`, `Cinematic`, `Exit`, `Toggle`, and `Pause`
+5. Watch the moving objects, particle systems, resource bar, current `timeScale`, current `fixedDeltaTime`, and unscaled UI timer update live
+6. Confirm pause during active bullet time resumes back into the correct slow-motion state
+7. Open `Samples~/BulletTime/BulletTimeVideos.zip` for the bundled walkthrough video
 
 ## Namespace used
 
-`GameplayMechanicsUMFOSS.Combat`
+`GameplayMechanicsUMFOSS.Systems`
 
 ## Folder structure
 
 ```text
 Runtime/
 └── Mechanic/
-    └── BoomerangWeapon/
+    └── BulletTimeSystem/
         ├── Scripts/
-        └── Script_Explainers/
+        ├── Script_Explainers/
+        └── Configs/
 
 Samples~/
-└── BoomerangWeapon/
-    ├── BoomerangWeaponProject.zip
-    ├── BoomerangWeaponDemoVideo.zip
-    └── BoomerangWeaponSetupWalkthrough.zip
+└── BulletTime/
+    ├── BulletTimeProject.zip
+    └── BulletTimeVideos.zip
 ```
 
 ## README entry
 
-The boomerang mechanic entry in `README.md` now points to:
-- `Runtime/Mechanic/BoomerangWeapon/Scripts/`
-- `Runtime/Mechanic/BoomerangWeapon/Script_Explainers/`
-- `Samples~/BoomerangWeapon/BoomerangWeaponProject.zip`
-- both in-repo video ZIPs
+The README now includes a quick-navigation row and a full mechanic card for Bullet Time / Slow Motion System, both linked to the new runtime folder and bundled sample/video ZIPs.
 
 ## Checklist
 
-- [x] Runtime scripts moved into the expected mechanic structure
-- [x] One script explainer added per boomerang runtime script
-- [x] Loose sample `Assets/` folder removed from the repo sample directory
-- [x] Original demo video kept in repo
-- [x] New walkthrough video ZIP added in repo
-- [x] README boomerang entry updated
-- [x] Contribution guidance updated for the current submission format
+- [x] Bullet time runtime scripts added
+- [x] Per-script explainers added
+- [x] Three default SlowMo config assets added
+- [x] PauseSystem integration hook added
+- [x] Sample project ZIP added
+- [x] Video ZIP added
+- [x] README entry added
